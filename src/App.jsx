@@ -1,26 +1,35 @@
-import { useRef, useState, useEffect } from "react";
-import ProfileCard from "./components/ProfileCard/ProfileCard";
-import ShinyText from "./components/ShinyText/ShinyText";
-import BlurText from "./components/BlurText/BlurText";
-import ScrambledText from "./components/ScrambledText/ScrambledText";
-import SplitText from "./components/SplitText/SplitText";
-import Lanyard from "./components/Lanyard/Lanyard";
-import GlassIcons from "./components/GlassIcons/GlassIcons";
-import { listTools, listProyek } from "./data";
-import ChromaGrid from "./components/ChromaGrid/ChromaGrid";
-import ProjectModal from "./components/ProjectModal/ProjectModal"; // <-- IMPORT MODAL
-import Aurora from "./components/Aurora/Aurora";
-import AOS from 'aos';
-import ChatRoom from "./components/ChatRoom";
-import 'aos/dist/aos.css'; // You can also use <link> for styles
-// ..
-AOS.init();
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import AnimatedBackground, { GradientOrb } from "./components/AnimatedBackground/AnimatedBackground";
+import ExperienceTimeline from "./components/ExperienceTimeline/ExperienceTimeline";
+import { CertificationsGrid } from "./components/CertificationCard/CertificationCard";
+import ProjectModal from "./components/ProjectModal/ProjectModal";
+import FloatingCards3D from "./components/FloatingCards3D/FloatingCards3D";
+import Hero3DElements from "./components/Hero3DElements";
+import CustomCursor from "./components/CustomCursor";
+
+import {
+  heroData,
+  aboutData,
+  skillsData,
+  projectsData,
+  experienceData,
+  educationData,
+  certificationsData,
+  socialLinks,
+} from "./data";
+
+AOS.init({
+  duration: 800,
+  once: true,
+  offset: 100,
+});
 
 function App() {
-  const aboutRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const [selectedProject, setSelectedProject] = useState(null); // null = modal tertutup
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const handleProjectClick = (project) => {
     setSelectedProject(project);
@@ -29,298 +38,506 @@ function App() {
   const handleCloseModal = () => {
     setSelectedProject(null);
   };
-  // -------------------------
-
-  useEffect(() => {
-    const isReload =
-      performance.getEntriesByType("navigation")[0]?.type === "reload";
-
-    if (isReload) {
-      // Ambil path tanpa hash
-      const baseUrl = window.location.origin + "/portofolio/";
-      window.location.replace(baseUrl);
-    }
-  }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (aboutRef.current) {
-      observer.observe(aboutRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-full -z-10 ">
-        <Aurora
-          colorStops={["#577870", "#1F97A6", "#127B99"]}
-          blend={0.5}
-          amplitude={1.0}
-          speed={0.5}
-        />
-      </div>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Custom Animated Cursor */}
+      <CustomCursor />
 
-        <div className="hero grid md:grid-cols-2 items-center pt-10 xl:gap-0 gap-6 grid-cols-1">
-          <div className="animate__animated animate__fadeInUp animate__delay-3s">
-            <div className="flex items-center gap-3 mb-6 bg bg-zinc-800 w-fit p-4 rounded-2xl">
-              <img src="./assets/faris1.png" className="w-10 rounded-md" />
-              <q>Avoid or just undertake it</q>
-            </div>
-            <h1 className="text-5xl font-bold mb-6">
-              <ShinyText text="Hi I'm Faris Edrik Prayoga" disabled={false} speed={3} className='custom-class' />
-            </h1>
-            <BlurText
-              text="A passionate application and web developer dedicated to crafting modern, high-performance digital experiences through innovative and user-friendly solutions."
-              delay={150}
-              animateBy="words"
-              direction="top"
-              className=" mb-6"
-            />
-            <div className="flex items-center sm:gap-4 gap-2">
-              <a 
-                href="./assets/CV.pdf" 
-                download="Faris_Edrik_Prayoga_CV.pdf" 
-                className="font-semibold bg-[#1a1a1a] p-4 px-6 rounded-full border border-gray-700 hover:bg-[#222] transition-colors"
+      {/* Animated Background */}
+      <AnimatedBackground />
+
+      {/* Noise Overlay */}
+      <div className="noise-overlay" />
+
+      {/* Main Content */}
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ==================== HERO SECTION ==================== */}
+        <section id="home" className="min-h-screen flex items-center pt-20 pb-10 relative">
+            {/* 3D Elements for filling the empty space on the left */}
+            <Hero3DElements />
+
+            <div className="w-full flex flex-col lg:flex-row gap-12 items-center justify-between relative z-10">
+              {/* Left Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="space-y-8"
               >
-                <ShinyText text="Download CV" disabled={false} speed={3} className="custom-class" />
-              </a>
+                {/* Badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="inline-flex items-center gap-3 glass rounded-full px-5 py-2"
+                >
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm text-gray-300">Available for opportunities</span>
+                </motion.div>
 
-              <a href="#project" className="font-semibold bg-[#1a1a1a] p-4 px-6 rounded-full border border-gray-700 hover:bg-[#222] transition-colors">
-                <ShinyText text="Explore My Projects" disabled={false} speed={3} className="custom-class" />
-              </a>
+                {/* Name */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight relative z-10"
+                >
+                  <span className="text-white">Hi, I'm </span>
+                  <br />
+                  <span className="text-gold-gradient">{heroData.name}</span>
+                </motion.h1>
+
+                {/* Role */}
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-xl md:text-2xl font-medium text-amber-400"
+                >
+                  {heroData.role}
+                </motion.p>
+
+                {/* Headline */}
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-lg text-gray-400 max-w-xl leading-relaxed"
+                >
+                  {heroData.headline}
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="flex flex-wrap gap-4 pt-4"
+                >
+                  <a href="#projects" className="btn-primary inline-flex items-center gap-2">
+                    <i className="ri-folder-line"></i>
+                    View Projects
+                  </a>
+                  <a href="./assets/CV.pdf" download="Reyhan_Resha_Sasmita_CV.pdf" className="btn-secondary inline-flex items-center gap-2">
+                    <i className="ri-download-line"></i>
+                    Download CV
+                  </a>
+                  <a href="#contact" className="btn-secondary inline-flex items-center gap-2">
+                    <i className="ri-chat-3-line"></i>
+                    Contact Me
+                  </a>
+                </motion.div>
+
+                {/* Social Links */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="flex gap-4 pt-4"
+                >
+                  <a href={socialLinks.github} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-amber-400 hover:border-amber-500/50 transition-all">
+                    <i className="ri-github-fill text-xl"></i>
+                  </a>
+                  <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-amber-400 hover:border-amber-500/50 transition-all">
+                    <i className="ri-linkedin-fill text-xl"></i>
+                  </a>
+                  <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-amber-400 hover:border-amber-500/50 transition-all">
+                    <i className="ri-instagram-fill text-xl"></i>
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              {/* Right Content - Floating 3D Cards */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="hidden lg:flex justify-center items-center relative h-[600px] lg:h-[700px] xl:h-[800px]"
+              >
+                <GradientOrb className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                <div className="relative w-full h-full">
+                  <FloatingCards3D />
+                </div>
+              </motion.div>
             </div>
 
-          </div>
-          <div className="md:ml-auto animate__animated animate__fadeInUp animate__delay-4s">
-            <ProfileCard
-              name="Faris Edrik P"
-              title="Web Developer"
-              handle="farisedrikp"
-              status="Online"
-              contactText="Contact Me"
-              avatarUrl="./assets/faris.png"
-              showUserInfo={true}
-              enableTilt={true}
-              enableMobileTilt={false}
-              onContactClick={() => console.log('Contact clicked')}
-            />
-          </div>
-        </div>
-        {/* tentang */}
-        <div className="mt-15 mx-auto w-full max-w-[1600px] rounded-3xl border-[5px] border-violet-500/40 shadow-[0_0_30px_rgba(168,85,247,0.4)] bg-gradient-to-br from-[#0a0a0a] via-[#111111] to-[#1a1a1a] p-6" id="about">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-10 pt-0 px-8" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
-            <div className="basis-full md:basis-7/12 pr-0 md:pr-8 border-b md:border-b-0 md:border-r border-violet-500/30">
-              {/* Kolom kiri */}
-              <div className="flex-1 text-left">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-5">
-                  About Me
+            {/* Scroll Indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
+              className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:block"
+            >
+              <div className="flex flex-col items-center gap-2 text-gray-500">
+                <span className="text-xs">Scroll to explore</span>
+                <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center p-2">
+                  <motion.div
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="w-1.5 h-1.5 rounded-full bg-amber-500"
+                  />
+                </div>
+              </div>
+            </motion.div>
+        </section>
+
+        {/* ==================== ABOUT SECTION ==================== */}
+        <section id="about" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="glass-card rounded-3xl p-8 md:p-12"
+          >
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="section-title mb-6">
+                  About <span className="text-gold-gradient">Me</span>
                 </h2>
-
-                <BlurText
-                  text="I’m Faris Edrik Prayoga, a full-stack developer passionate about building modern, high-performance applications with an intuitive user experience. I enjoy working with the latest technologies like Artificial Intelligence, Machine Learning, and cloud-based development, blending creativity with precision to deliver impactful solutions. With over three years of experience and more than 20 completed projects, I’m committed to helping users and businesses grow in the digital era through functional, aesthetic, and scalable digital products."
-                  delay={150}
-                  animateBy="words"
-                  direction="top"
-                  className="text-base md:text-lg leading-relaxed mb-10 text-gray-300"
-                />
-
-                <div className="flex flex-col sm:flex-row items-center sm:justify-between text-center sm:text-left gap-y-8 sm:gap-y-0 mb-4 w-full">
-                  <div>
-                    <h1 className="text-3xl md:text-4xl mb-1">
-                      20<span className="text-violet-500">+</span>
-                    </h1>
-                    <p>Project Finished</p>
-                  </div>
-                  <div>
-                    <h1 className="text-3xl md:text-4xl mb-1">
-                      3<span className="text-violet-500">+</span>
-                    </h1>
-                    <p>Years of Experience</p>
-                  </div>
-                  <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="600" data-aos-once="true">
-                    <h1 className="text-3xl md:text-4xl mb-1">
-                      3.81<span className="text-violet-500">/4.00</span>
-                    </h1>
-                    <p>GPA</p>
-                  </div>
+                <p className="text-gray-400 text-lg leading-relaxed mb-8">
+                  {aboutData.summary}
+                </p>
+                <div className="grid grid-cols-3 gap-6">
+                  {aboutData.stats.map((stat, index) => (
+                    <motion.div
+                      key={stat.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="text-center"
+                    >
+                      <div className="text-3xl md:text-4xl font-bold text-amber-400 mb-2">
+                        {stat.value}
+                      </div>
+                      <div className="text-sm text-gray-500">{stat.label}</div>
+                    </motion.div>
+                  ))}
                 </div>
-
-
-                <ShinyText
-                  text="Working with heart, creating with mind."
-                  disabled={false}
-                  speed={3}
-                  className="text-sm md:text-base text-violet-400"
-                />
               </div>
-            </div>
 
-            {/* Kolom kanan */}
-            <div className="basis-full md:basis-5/12 pl-0 md:pl-8 overflow-hidden max-w-full flex justify-center ">
-              <Lanyard position={[0, 0, 15]} gravity={[0, -40, 0]} />
-            </div>
-          </div>
-
-        </div>
-        <div className="tools mt-32">
-          <h1 className="text-4xl/snug font-bold mb-4" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true" >Tools & Technologies</h1>
-          <p className="w-2/5 text-base/loose opacity-50" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300" data-aos-once="true">My Profesional Skills</p>
-          <div className="tools-box mt-14 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-
-            {listTools.map((tool) => (
-              <div
-                key={tool.id} data-aos="fade-up" data-aos-duration="1000" data-aos-delay={tool.dad} data-aos-once="true"
-                className="flex items-center gap-4 p-4 border border-zinc-700 rounded-xl bg-zinc-900/60 backdrop-blur-md hover:bg-zinc-800/80 transition-all duration-300 group shadow-lg"
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="glass rounded-2xl p-8"
               >
-                <img
-                  src={tool.gambar}
-                  alt="Tools Image"
-                  className="w-16 h-16 object-contain bg-zinc-800 p-2 rounded-lg group-hover:bg-zinc-900 transition-all duration-300"
-                />
-                <div className="flex flex-col overflow-hidden">
-                  <div className="truncate">
-                    <ShinyText
-                      text={tool.nama}
-                      disabled={false}
-                      speed={3}
-                      className="text-lg font-semibold block"
-                    />
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30">
+                    <i className="ri-graduation-cap-line text-2xl text-amber-400"></i>
                   </div>
-                  <p className="text-sm text-zinc-400 truncate">{tool.ket}</p>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">{educationData.institution}</h3>
+                    <p className="text-amber-400">{educationData.degree}</p>
+                  </div>
                 </div>
-              </div>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {educationData.description}
+                </p>
+                <div className="mt-4 text-sm text-gray-500">
+                  <i className="ri-time-line mr-2"></i>
+                  {educationData.period}
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ==================== SKILLS SECTION ==================== */}
+        <section id="skills" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-title mb-4">
+              Tech <span className="text-gold-gradient">Stack</span>
+            </h2>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto">
+              Technologies and tools I use to bring ideas to life
+            </p>
+          </motion.div>
+
+          <div className="space-y-12">
+            {Object.entries(skillsData).map(([category, skills], categoryIndex) => (
+              <motion.div
+                key={category}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: categoryIndex * 0.1 }}
+              >
+                <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                  <span className="w-8 h-0.5 bg-gradient-to-r from-amber-500 to-transparent"></span>
+                  {category}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {skills.map((skill, index) => (
+                    <motion.div
+                      key={skill.name}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -5, scale: 1.05 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="glass-card rounded-xl p-4 flex flex-col items-center gap-3 cursor-pointer group"
+                    >
+                      <div className="w-12 h-12 flex items-center justify-center">
+                        <img
+                          src={skill.icon}
+                          alt={skill.name}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            e.target.nextSibling.style.display = "flex";
+                          }}
+                        />
+                        <div className="hidden w-12 h-12 bg-zinc-800 rounded-lg items-center justify-center text-amber-400 text-xl">
+                          <i className="ri-code-line"></i>
+                        </div>
+                      </div>
+                      <span className="text-sm font-medium text-gray-300 group-hover:text-amber-400 transition-colors">
+                        {skill.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
             ))}
           </div>
-        </div>
-        {/* tentang */}
+        </section>
 
-        {/* Proyek */}
-        <div className="proyek mt-32 py-10" id="project" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true"></div>
-        <h1 className="text-center text-4xl font-bold mb-2" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">Project</h1>
-        <p className="text-base/loose text-center opacity-50" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300" data-aos-once="true">Showcasing a selection of projects that reflect my skills, creativity, and passion for building meaningful digital experiences.</p>
-        <div className="proyek-box mt-14" >
-
-          <div style={{ height: 'auto', position: 'relative' }} data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400" data-aos-once="true" >
-            <ChromaGrid
-              items={listProyek}
-              onItemClick={handleProjectClick} // Kirim fungsi untuk handle klik
-              radius={500}
-              damping={0.45}
-              fadeOut={0.6}
-              ease="power3.out"
-            />
-          </div>
-        </div>
-        {/* Proyek */}
-
-
-        {/* Kontak */}
-        <div className="kontak mt-32 sm:p-10 p-0" id="contact">
-          <h1
-            className="text-4xl mb-2 font-bold text-center"
-            data-aos="fade-up"
-            data-aos-duration="1000"
-            data-aos-once="true"
+        {/* ==================== PROJECTS SECTION ==================== */}
+        <section id="projects" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
           >
-            Contact & Chat
-          </h1>
-          <p
-            className="text-base/loose text-center mb-10 opacity-50"
-            data-aos="fade-up"
-            data-aos-duration="1000"
-            data-aos-delay="300"
-            data-aos-once="true"
-          >
-            Get in touch with me or chat in real-time
-          </p>
+            <h2 className="section-title mb-4">
+              Featured <span className="text-gold-gradient">Projects</span>
+            </h2>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto">
+              A selection of projects that showcase my skills in fullstack development and AI automation
+            </p>
+          </motion.div>
 
-          {/* Container dua kolom */}
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Chat Room di kiri */}
-            <div className="flex-1 bg-zinc-800 p-6 rounded-md" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400" data-aos-once="true">
-              <ChatRoom />
-            </div>
-
-            {/* Contact Form di kanan */}
-            <div className="flex-1">
-              <form
-                action="https://formsubmit.co/rissoppa21@gmail.com"
-                method="POST"
-                className="bg-zinc-800 p-10 w-full rounded-md"
-                autoComplete="off"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-                data-aos-delay="500"
-                data-aos-once="true"
+          <div className="grid md:grid-cols-2 gap-8">
+            {projectsData.map((project, index) => (
+              <motion.div
+                key={project.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                onClick={() => handleProjectClick(project)}
+                className="project-card cursor-pointer group"
               >
-                <div className="flex flex-col gap-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Full Name</label>
-                    <input
-                      type="text"
-                      name="Name"
-                      placeholder="Input Name..."
-                      className="border border-zinc-500 p-2 rounded-md"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="font-semibold">Email</label>
-                    <input
-                      type="email"
-                      name="Email"
-                      placeholder="Input Email..."
-                      className="border border-zinc-500 p-2 rounded-md"
-                      required
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="message" className="font-semibold">Message</label>
-                    <textarea
-                      name="message"
-                      id="message"
-                      cols="45"
-                      rows="7"
-                      placeholder="Message..."
-                      className="border border-zinc-500 p-2 rounded-md"
-                      required
-                    ></textarea>
-                  </div>
-                  <div className="text-center">
-                    <button
-                      type="submit"
-                      className="font-semibold bg-[#1a1a1a] p-4 px-6 rounded-full w-full cursor-pointer border border-gray-700 hover:bg-[#222] transition-colors"
-                    >
-                      <ShinyText text="Send" disabled={false} speed={3} className="custom-class" />
-                    </button>
+                <div className="relative h-56 overflow-hidden rounded-t-2xl">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <span className="px-3 py-1 bg-amber-500/20 backdrop-blur-md border border-amber-500/30 rounded-full text-amber-400 text-xs font-medium">
+                      {project.status}
+                    </span>
                   </div>
                 </div>
-              </form>
-            </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                  <p className="text-amber-400 text-sm mb-4">{project.subtitle}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.slice(0, 3).map((tech, i) => (
+                      <span key={i} className="px-3 py-1 bg-zinc-800 rounded-full text-xs text-gray-400">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
-        {/* Kontak */}
+        </section>
+
+        {/* ==================== EXPERIENCE SECTION ==================== */}
+        <section id="experience" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-title mb-4">
+              Work <span className="text-gold-gradient">Experience</span>
+            </h2>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto">
+              My professional journey and career highlights
+            </p>
+          </motion.div>
+          <div className="max-w-3xl mx-auto">
+            <ExperienceTimeline experiences={experienceData} />
+          </div>
+        </section>
+
+        {/* ==================== CERTIFICATIONS SECTION ==================== */}
+        <section id="certifications" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-title mb-4">
+              Certifications & <span className="text-gold-gradient">Achievements</span>
+            </h2>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto">
+              Continuous learning and professional development
+            </p>
+          </motion.div>
+          <CertificationsGrid certifications={certificationsData} />
+        </section>
+
+        {/* ==================== CONTACT SECTION ==================== */}
+        <section id="contact" className="py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="section-title mb-4">
+              Get In <span className="text-gold-gradient">Touch</span>
+            </h2>
+            <p className="section-subtitle text-gray-400 max-w-2xl mx-auto">
+              Have a project in mind? Let's work together to bring your ideas to life.
+            </p>
+          </motion.div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="space-y-6"
+            >
+              <div className="glass-card rounded-2xl p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30">
+                  <i className="ri-mail-line text-2xl text-amber-400"></i>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Email</h4>
+                  <a href="mailto:reyhanresha87@gmail.com" className="text-gray-400 hover:text-amber-400 transition-colors">
+                    reyhanresha87@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="glass-card rounded-2xl p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30">
+                  <i className="ri-github-line text-2xl text-amber-400"></i>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">GitHub</h4>
+                  <a href="https://github.com/reyhanresha" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-amber-400 transition-colors">
+                    github.com/reyhanresha
+                  </a>
+                </div>
+              </div>
+
+              <div className="glass-card rounded-2xl p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30">
+                  <i className="ri-linkedin-line text-2xl text-amber-400"></i>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">LinkedIn</h4>
+                  <a href="https://linkedin.com/in/reyhanresha" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-amber-400 transition-colors">
+                    linkedin.com/in/reyhanresha
+                  </a>
+                </div>
+              </div>
+
+              <div className="glass-card rounded-2xl p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center border border-amber-500/30">
+                  <i className="ri-map-pin-line text-2xl text-amber-400"></i>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-white">Location</h4>
+                  <p className="text-gray-400">Jakarta, Indonesia</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Contact Form */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <form
+                action="https://formsubmit.co/reyhanresha87@gmail.com"
+                method="POST"
+                className="glass-card rounded-2xl p-8 space-y-6"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    placeholder="John Doe"
+                    className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="john@example.com"
+                    className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={5}
+                    placeholder="Your message..."
+                    className="w-full px-4 py-3 bg-zinc-800/50 border border-zinc-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 transition-all resize-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="btn-primary w-full justify-center"
+                >
+                  <i className="ri-send-plane-line mr-2"></i>
+                  Send Message
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        </section>
       </main>
 
+      {/* Project Modal */}
       <ProjectModal
         isOpen={!!selectedProject}
         onClose={handleCloseModal}
         project={selectedProject}
       />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
