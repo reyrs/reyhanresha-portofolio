@@ -32,23 +32,27 @@
   background-clip: text;
 }
 
-/* Glassmorphism */
+/* Glassmorphism
+   No backdrop-filter here: these cards sit over an animated full-screen canvas,
+   so a backdrop blur would be recomputed for every card on every frame.
+   A near-opaque tinted fill looks the same on this dark background. */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(24, 24, 27, 0.72);
   border: 1px solid rgba(255, 184, 0, 0.1);
 }
 
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 184, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background:
+    linear-gradient(135deg, rgba(255, 184, 0, 0.05) 0%, rgba(255, 140, 0, 0.02) 100%),
+    rgba(18, 18, 20, 0.78);
   border: 1px solid rgba(255, 184, 0, 0.15);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .glass-card:hover {
-  background: linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%);
+  background:
+    linear-gradient(135deg, rgba(255, 184, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%),
+    rgba(18, 18, 20, 0.78);
   border-color: rgba(255, 184, 0, 0.3);
   box-shadow: 0 20px 40px rgba(255, 184, 0, 0.1), 0 0 60px rgba(255, 184, 0, 0.05);
 }
@@ -60,7 +64,7 @@
   font-weight: 600;
   padding: 14px 28px;
   border-radius: 50px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
   box-shadow: 0 4px 20px rgba(255, 184, 0, 0.3);
 }
 
@@ -76,7 +80,7 @@
   padding: 14px 28px;
   border-radius: 50px;
   border: 2px solid rgba(255, 184, 0, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease, border-color 0.25s ease;
 }
 
 .btn-secondary:hover {
@@ -131,7 +135,7 @@
 
 /* Card Hover Effects */
 .card-hover {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .card-hover:hover {
@@ -178,7 +182,7 @@
   font-size: 0.875rem;
   font-weight: 500;
   color: #FFB800;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .skill-badge:hover {
@@ -194,7 +198,7 @@
   border-radius: 20px;
   background: linear-gradient(145deg, rgba(20, 20, 20, 0.9), rgba(10, 10, 10, 0.95));
   border: 1px solid rgba(255, 184, 0, 0.1);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.45s ease, box-shadow 0.45s ease;
 }
 
 .project-card:hover {
@@ -228,7 +232,7 @@
   border: 1px solid rgba(255, 184, 0, 0.15);
   border-radius: 16px;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .cert-card::before {
@@ -240,12 +244,15 @@
   height: 200%;
   background: conic-gradient(from 0deg, transparent, rgba(255, 184, 0, 0.1), transparent, rgba(255, 184, 0, 0.05), transparent);
   animation: rotate 6s linear infinite;
+  /* Only spin while visible; paused animations cost nothing */
+  animation-play-state: paused;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .cert-card:hover::before {
   opacity: 1;
+  animation-play-state: running;
 }
 
 .cert-card:hover {
@@ -268,7 +275,10 @@
   pointer-events: none;
   z-index: 9999;
   opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  /* Own compositor layer so the SVG noise is rasterized once, not on every repaint below it */
+  transform: translateZ(0);
+  will-change: transform;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 /* Responsive Typography */
@@ -285,6 +295,21 @@
 /* Smooth Page Load */
 html {
   scroll-behavior: smooth;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Focus States */

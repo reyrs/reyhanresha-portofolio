@@ -1,4 +1,11 @@
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "../../hooks/useInViewport";
+
+const LINK_DIST = 120;
+const LINK_DIST_SQ = LINK_DIST * LINK_DIST;
+// Lines are drawn in a few opacity buckets so each bucket is one stroke() call
+// instead of one stroke() per pair.
+const ALPHA_BUCKETS = 4;
 
 const AnimatedBackground = () => {
   const canvasRef = useRef(null);
@@ -7,110 +14,126 @@ const AnimatedBackground = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    let animationFrameId;
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const reduceMotion = prefersReducedMotion();
+    let animationFrameId = null;
     let particles = [];
+    let width = 0;
+    let height = 0;
 
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const makeParticle = () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2 + 0.5,
+      speedX: Math.random() * 0.5 - 0.25,
+      speedY: Math.random() * 0.5 - 0.25,
+      color: `hsla(${Math.random() > 0.5 ? 45 : 35}, 100%, 50%, ${Math.random() * 0.5 + 0.1})`,
+    });
+
+    const setup = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      // Fewer particles on small screens; pair checks grow with n^2
+      const count = Math.min(60, Math.floor((width * height) / 25000));
+      particles = Array.from({ length: count }, makeParticle);
     };
 
-    resize();
-    window.addEventListener("resize", resize);
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
 
-    // Particle class
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5 + 0.1;
-        this.hue = Math.random() > 0.5 ? 45 : 35; // Gold/orange hues
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        // Wrap around edges
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = 0;
-        if (this.y < 0) this.y = canvas.height;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${this.hue}, 100%, 50%, ${this.opacity})`;
-        ctx.fill();
-      }
-    }
-
-    // Initialize particles
-    const initParticles = () => {
-      particles = [];
-      const particleCount = Math.min(100, Math.floor((canvas.width * canvas.height) / 15000));
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-      }
-    };
-
-    initParticles();
-
-    // Animation loop
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw connections
+      const buckets = Array.from({ length: ALPHA_BUCKETS }, () => []);
       for (let i = 0; i < particles.length; i++) {
+        const a = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(255, 184, 0, ${0.1 * (1 - distance / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
+          const b = particles[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < LINK_DIST_SQ) {
+            const strength = 1 - Math.sqrt(distSq) / LINK_DIST;
+            const bucket = Math.min(ALPHA_BUCKETS - 1, Math.floor(strength * ALPHA_BUCKETS));
+            buckets[bucket].push(a.x, a.y, b.x, b.y);
           }
         }
       }
 
-      // Update and draw particles
-      particles.forEach((particle) => {
-        particle.update();
-        particle.draw();
+      ctx.lineWidth = 0.5;
+      buckets.forEach((lines, k) => {
+        if (!lines.length) return;
+        ctx.strokeStyle = `rgba(255, 184, 0, ${(0.1 * (k + 0.5)) / ALPHA_BUCKETS})`;
+        ctx.beginPath();
+        for (let n = 0; n < lines.length; n += 4) {
+          ctx.moveTo(lines[n], lines[n + 1]);
+          ctx.lineTo(lines[n + 2], lines[n + 3]);
+        }
+        ctx.stroke();
       });
 
-      animationFrameId = window.requestAnimationFrame(animate);
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
     };
 
-    animate();
+    const step = () => {
+      for (const p of particles) {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x > width) p.x = 0;
+        else if (p.x < 0) p.x = width;
+        if (p.y > height) p.y = 0;
+        else if (p.y < 0) p.y = height;
+      }
+    };
 
-    // Handle resize
+    const loop = () => {
+      step();
+      draw();
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (reduceMotion) {
+        draw();
+        return;
+      }
+      if (animationFrameId === null) animationFrameId = requestAnimationFrame(loop);
+    };
+
+    const stop = () => {
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    };
+
+    setup();
+    start();
+
+    let resizeTimer;
     const handleResize = () => {
-      resize();
-      initParticles();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        setup();
+        if (reduceMotion) draw();
+      }, 150);
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") start();
+      else stop();
     };
 
     window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", handleVisibility);
 
-    // Cleanup
     return () => {
-      window.removeEventListener("resize", resize);
+      stop();
+      clearTimeout(resizeTimer);
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
@@ -121,11 +144,16 @@ const AnimatedBackground = () => {
         className="fixed inset-0 pointer-events-none z-0"
         style={{ opacity: 0.6 }}
       />
-      {/* Gradient Overlay */}
+      {/* Gradient Overlay: radial gradients instead of blur filters, which are costly to repaint */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-zinc-950/50 to-zinc-950" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl" />
+        <div
+          className="absolute top-0 left-1/4 w-[36rem] h-[36rem] -translate-x-1/4 -translate-y-1/4"
+          style={{ background: "radial-gradient(circle, rgba(245,158,11,0.10) 0%, transparent 65%)" }}
+        />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] translate-x-1/4 translate-y-1/4"
+          style={{ background: "radial-gradient(circle, rgba(249,115,22,0.10) 0%, transparent 65%)" }}
+        />
       </div>
     </>
   );
@@ -135,7 +163,10 @@ const AnimatedBackground = () => {
 export const GradientOrb = ({ className = "" }) => {
   return (
     <div className={`absolute pointer-events-none ${className}`}>
-      <div className="w-96 h-96 bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent rounded-full blur-3xl animate-pulse" />
+      <div
+        className="w-[32rem] h-[32rem] animate-pulse motion-reduce:animate-none will-change-[opacity]"
+        style={{ background: "radial-gradient(circle, rgba(245,158,11,0.18) 0%, rgba(249,115,22,0.08) 40%, transparent 70%)" }}
+      />
     </div>
   );
 };

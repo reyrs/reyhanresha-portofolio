@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { motion, useSpring } from "motion/react";
 
+// Only for precise pointers (mouse/trackpad). Touch devices keep the native cursor.
+const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
+
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
+  const [enabled] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia(FINE_POINTER_QUERY).matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
   
   // Spring configurations for smooth trailing effect
   const mouseX = useSpring(0, { stiffness: 500, damping: 28 });
@@ -12,6 +21,8 @@ export default function CustomCursor() {
   const dotY = useSpring(0, { stiffness: 1000, damping: 40 });
 
   useEffect(() => {
+    if (!enabled) return;
+
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -33,24 +44,22 @@ export default function CustomCursor() {
       setIsHovering(!!isClickable);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mouseover", handleMouseOver, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [mouseX, mouseY, dotX, dotY]);
+  }, [enabled, mouseX, mouseY, dotX, dotY]);
+
+  if (!enabled) return null;
 
   return (
     <>
       <style>{`
         body, a, button, .cursor-pointer {
           cursor: none !important;
-        }
-        @media (max-width: 768px) {
-          .custom-cursor { display: none !important; }
-          body, a, button, .cursor-pointer { cursor: auto !important; }
         }
       `}</style>
       
@@ -62,8 +71,8 @@ export default function CustomCursor() {
           y: mouseY,
           translateX: "-50%",
           translateY: "-50%",
-          mixBlendMode: "difference",
         }}
+        transition={{ type: "spring", stiffness: 400, damping: 30 }}
         animate={{
           scale: isHovering ? 2 : 1,
           backgroundColor: isHovering ? "rgba(245, 158, 11, 0.3)" : "rgba(245, 158, 11, 0)",

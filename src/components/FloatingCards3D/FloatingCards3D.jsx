@@ -1,19 +1,19 @@
 /* eslint-disable react/no-unknown-property */
 'use client';
 import { useRef, useState } from 'react';
+import useInViewport, { prefersReducedMotion } from '../../hooks/useInViewport';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, Float, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import './FloatingCards3D.css';
 
-function CodeCard({ position, rotation, color, codeLines, delay = 0 }) {
+function CodeCard({ position, rotation, color, codeLines }) {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += delta * 0.1;
-      meshRef.current.position.y += Math.sin(state.clock.elapsedTime * 2 + delay) * 0.002;
     }
   });
 
@@ -64,7 +64,6 @@ function TerminalCard({ position, delay = 0 }) {
   useFrame((state) => {
     if (meshRef.current) {
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5 + delay) * 0.1;
-      meshRef.current.position.y += Math.cos(state.clock.elapsedTime * 1.5 + delay) * 0.002;
     }
   });
 
@@ -103,9 +102,9 @@ function TerminalCard({ position, delay = 0 }) {
 function FloatingCodeBlock({ position }) {
   const meshRef = useRef();
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += 0.005;
+      meshRef.current.rotation.y += delta * 0.3;
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
     }
   });
@@ -158,9 +157,18 @@ function FloatingCodeBlock({ position }) {
 }
 
 export default function FloatingCards3D() {
+  const wrapperRef = useRef(null);
+  const visible = useInViewport(wrapperRef);
+  const animate = visible && !prefersReducedMotion();
+
   return (
-    <div className="floating-cards-3d">
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
+    <div ref={wrapperRef} className="floating-cards-3d">
+      <Canvas
+        camera={{ position: [0, 0, 6], fov: 50 }}
+        dpr={[1, 1.5]}
+        frameloop={animate ? 'always' : 'demand'}
+        gl={{ antialias: true, powerPreference: 'high-performance' }}
+      >
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} color="#FFB800" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#bd93f9" />
@@ -172,7 +180,6 @@ export default function FloatingCards3D() {
           rotation={[0, 0.3, 0]}
           color="#282a36"
           codeLines={["function dev() {", '  return "AI"', "}"]}
-          delay={0}
         />
         
         <CodeCard
@@ -180,7 +187,6 @@ export default function FloatingCards3D() {
           rotation={[0, -0.2, 0]}
           color="#1a1a2e"
           codeLines={["<Project />", "status: live", "tech: React"]}
-          delay={1}
         />
         
         <TerminalCard position={[1.5, 2, -1.5]} delay={0.5} />

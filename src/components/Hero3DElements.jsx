@@ -3,6 +3,7 @@ import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, Box, Torus } from '@react-three/drei';
 import * as THREE from 'three';
+import useInViewport, { prefersReducedMotion } from '../hooks/useInViewport';
 
 function Shape({ type, position, color, size, speed, distort }) {
   const meshRef = useRef();
@@ -18,7 +19,7 @@ function Shape({ type, position, color, size, speed, distort }) {
     <Float speed={speed * 2} rotationIntensity={1.5} floatIntensity={2}>
       <group position={position}>
         {type === 'sphere' && (
-          <Sphere ref={meshRef} args={[size, 64, 64]}>
+          <Sphere ref={meshRef} args={[size, 32, 32]}>
             <MeshDistortMaterial
               color={color}
               speed={speed * 2}
@@ -59,6 +60,9 @@ function Shape({ type, position, color, size, speed, distort }) {
 }
 
 export default function Hero3DElements() {
+  const wrapperRef = useRef(null);
+  const visible = useInViewport(wrapperRef);
+  const animate = visible && !prefersReducedMotion();
   const shapes = useMemo(() => [
     { type: 'sphere', position: [-2, 1.5, 0], color: '#FBBF24', size: 0.6, speed: 0.5, distort: 0.4 },
     { type: 'torus', position: [2, -1, 1], color: '#F59E0B', size: 0.4, speed: 0.7, distort: 0 },
@@ -67,8 +71,13 @@ export default function Hero3DElements() {
   ], []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-60">
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} alpha={true}>
+    <div ref={wrapperRef} className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-60">
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 45 }}
+        dpr={[1, 1.5]}
+        frameloop={animate ? 'always' : 'demand'}
+        gl={{ alpha: true, antialias: false, powerPreference: 'high-performance' }}
+      >
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} color="#FBBF24" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#D97706" />
