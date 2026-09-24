@@ -1,12 +1,11 @@
 {
   "name": "portofolio",
-
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp dist/index.html dist/404.html",
+    "build": "vite build && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
@@ -16,8 +15,6 @@
     "@react-three/fiber": "^9.3.0",
     "@react-three/rapier": "^2.1.0",
     "@tailwindcss/vite": "^4.1.11",
-    "animate.css": "^4.1.1",
-    "aos": "^3.0.0-beta.6",
     "firebase": "^12.1.0",
     "gsap": "^3.13.0",
     "meshline": "^3.3.1",
@@ -37,6 +34,7 @@
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "eslint": "^9.33.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "gh-pages": "^6.3.0",

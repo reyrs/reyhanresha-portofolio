@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { motion } from "motion/react";
 
 const AnimatedBackground = () => {
   const canvasRef = useRef(null);

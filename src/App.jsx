@@ -1,14 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, lazy, Suspense } from "react";
 import { motion } from "motion/react";
-import AOS from "aos";
-import "aos/dist/aos.css";
 
 import AnimatedBackground, { GradientOrb } from "./components/AnimatedBackground/AnimatedBackground";
 import ExperienceTimeline from "./components/ExperienceTimeline/ExperienceTimeline";
 import { CertificationsGrid } from "./components/CertificationCard/CertificationCard";
 import ProjectModal from "./components/ProjectModal/ProjectModal";
-import FloatingCards3D from "./components/FloatingCards3D/FloatingCards3D";
-import Hero3DElements from "./components/Hero3DElements";
 import CustomCursor from "./components/CustomCursor";
 
 import {
@@ -22,11 +18,9 @@ import {
   socialLinks,
 } from "./data";
 
-AOS.init({
-  duration: 800,
-  once: true,
-  offset: 100,
-});
+// Three.js scenes are heavy; load them in a separate chunk after first paint
+const FloatingCards3D = lazy(() => import("./components/FloatingCards3D/FloatingCards3D"));
+const Hero3DElements = lazy(() => import("./components/Hero3DElements"));
 
 function App() {
   const [selectedProject, setSelectedProject] = useState(null);
@@ -55,7 +49,9 @@ function App() {
         {/* ==================== HERO SECTION ==================== */}
         <section id="home" className="min-h-screen flex items-center pt-20 pb-10 relative">
             {/* 3D Elements for filling the empty space on the left */}
-            <Hero3DElements />
+            <Suspense fallback={null}>
+              <Hero3DElements />
+            </Suspense>
 
             <div className="w-full flex flex-col lg:flex-row gap-12 items-center justify-between relative z-10">
               {/* Left Content */}
@@ -157,7 +153,9 @@ function App() {
               >
                 <GradientOrb className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                 <div className="relative w-full h-full">
-                  <FloatingCards3D />
+                  <Suspense fallback={null}>
+                    <FloatingCards3D />
+                  </Suspense>
                 </div>
               </motion.div>
             </div>
@@ -287,16 +285,18 @@ function App() {
                       className="glass-card rounded-xl p-4 flex flex-col items-center gap-3 cursor-pointer group"
                     >
                       <div className="w-12 h-12 flex items-center justify-center">
-                        <img
-                          src={skill.icon}
-                          alt={skill.name}
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            e.target.style.display = "none";
-                            e.target.nextSibling.style.display = "flex";
-                          }}
-                        />
-                        <div className="hidden w-12 h-12 bg-zinc-800 rounded-lg items-center justify-center text-amber-400 text-xl">
+                        {skill.icon ? (
+                          <img
+                            src={skill.icon}
+                            alt={skill.name}
+                            className="w-full h-full object-contain"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.nextSibling.style.display = "flex";
+                            }}
+                          />
+                        ) : null}
+                        <div className={`${skill.icon ? "hidden" : "flex"} w-12 h-12 bg-zinc-800 rounded-lg items-center justify-center text-amber-400 text-xl`}>
                           <i className="ri-code-line"></i>
                         </div>
                       </div>
