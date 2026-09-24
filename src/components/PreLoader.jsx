@@ -4,28 +4,28 @@ import CountUp from "./CountUp/CountUp"
 
 const PreLoader = () => {
   const [loading, setLoading] = useState(true)
-  const [countDone, setCountDone] = useState(false)
   const [fadeText, setFadeText] = useState(false)
   const [fadeScreen, setFadeScreen] = useState(false)
 
+  // Jadwal tetap sejak mount, tidak bergantung pada CountUp onEnd.
+  // Sebelumnya preloader bisa macet selamanya kalau onEnd tidak terpanggil
+  // (tab di background, main thread sibuk karena Three.js, dll).
   useEffect(() => {
-    if (countDone) {
-      // Fade teks
-      const fadeTextTimer = setTimeout(() => setFadeText(true), 3000)
+    // Fade teks
+    const fadeTextTimer = setTimeout(() => setFadeText(true), 1500)
 
-      // Fade seluruh screen
-      const fadeScreenTimer = setTimeout(() => setFadeScreen(true), 2000)
+    // Fade seluruh screen
+    const fadeScreenTimer = setTimeout(() => setFadeScreen(true), 2000)
 
-      // Unmount preloader setelah animasi fade selesai
-      const hideTimer = setTimeout(() => setLoading(false), 3000)
+    // Unmount preloader setelah animasi fade selesai
+    const hideTimer = setTimeout(() => setLoading(false), 3000)
 
-      return () => {
-        clearTimeout(fadeTextTimer)
-        clearTimeout(fadeScreenTimer)
-        clearTimeout(hideTimer)
-      }
+    return () => {
+      clearTimeout(fadeTextTimer)
+      clearTimeout(fadeScreenTimer)
+      clearTimeout(hideTimer)
     }
-  }, [countDone])
+  }, [])
 
   return (
     loading && (
@@ -52,7 +52,6 @@ const PreLoader = () => {
             direction="up"
             duration={1}
             className="count-up-text"
-            onEnd={() => setCountDone(true)}
           />
         </div>
       </div>
