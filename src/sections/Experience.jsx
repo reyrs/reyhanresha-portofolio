@@ -76,7 +76,7 @@ export default function Experience() {
                 <ul data-job-part className="mt-5 space-y-2.5 text-[#6e6e73] text-[0.92rem]">
                   {job.points.map((p) => (
                     <li key={p} className="flex max-w-[62ch] gap-3">
-                      <span aria-hidden="true" className="mt-[0.65em] h-1.5 w-1.5 rounded-full bg-black shrink-0" />
+                      <span aria-hidden="true" className="shrink-0 text-[#86868b]">–</span>
                       <span>{p}</span>
                     </li>
                   ))}

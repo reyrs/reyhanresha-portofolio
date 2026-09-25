@@ -47,17 +47,11 @@ export default function Hero({ ready }) {
       <div data-hero-inner className="shell flex flex-1 flex-col justify-between">
         {/* Top Status & Timestamp Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-6 sm:pb-8 border-b border-black/[0.08] mt-2 sm:mt-4 mb-8 sm:mb-12" data-hero-fade>
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-black/10 bg-black/[0.04] px-4 py-1.5 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-black opacity-40" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-black" />
-            </span>
-            <span className="font-mono text-xs font-semibold text-[#1d1d1f] tracking-wide uppercase">
-              {profile.status}
-            </span>
-          </div>
+          <span data-shatter="block" className="font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#1d1d1f]">
+            {profile.status}
+          </span>
 
-          <div className="font-mono text-xs text-[#86868b] flex items-center gap-3">
+          <div data-shatter="block" className="font-mono text-xs text-[#86868b] flex items-center gap-3">
             <span>{profile.location}</span>
             <span className="text-black/20">·</span>
             <span className="tabular-nums font-medium text-[#1d1d1f]">{time} WIB</span>
@@ -68,24 +62,20 @@ export default function Hero({ ready }) {
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           {/* Left Column: Clear High-Contrast Headline & Pitch */}
           <div className="lg:col-span-7">
-            {/* Apple Micro Eyebrow */}
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-black/[0.08] bg-black/[0.04] px-3.5 py-1 backdrop-blur-md shadow-sm" data-hero-fade>
-              <span className="h-1.5 w-1.5 rounded-full bg-black shadow-[0_0_4px_rgba(0,0,0,0.3)]" />
-              <span className="font-mono text-[11px] font-medium uppercase tracking-widest text-[#1d1d1f]">
-                Fullstack · AI Agents · SDET Precision
-              </span>
-            </div>
+            <p className="mb-5 font-mono text-xs font-medium uppercase tracking-[0.14em] text-[#86868b]" data-hero-fade data-shatter="chars">
+              Fullstack · AI Agents · SDET Precision
+            </p>
 
             <h1 className="display text-[clamp(2.6rem,5.6vw,5.5rem)] text-[#1d1d1f] font-bold leading-[1.08] tracking-tight py-1">
-              <span data-hero-line className="block apple-headline-gradient pb-1.5 pt-0.5">
+              <span data-hero-line data-shatter="chars" className="block apple-headline-gradient pb-1.5 pt-0.5">
                 Reyhan Resha
               </span>
-              <span data-hero-line className="block text-[#1d1d1f] pb-1.5">
+              <span data-hero-line data-shatter="chars" className="block text-[#1d1d1f] pb-1.5">
                 Sasmita<span className="text-black">.</span>
               </span>
             </h1>
 
-            <p className="mt-6 max-w-[50ch] text-lg sm:text-xl leading-relaxed text-[#6e6e73]" data-hero-fade>
+            <p className="mt-6 max-w-[50ch] text-lg sm:text-xl leading-relaxed text-[#6e6e73]" data-hero-fade data-shatter="chars">
               Engineering <Scramble words={profile.builds} /> with Next.js, Three.js, and autonomous AI systems, hardened with the test rigor of an SDET at <strong className="font-semibold text-[#1d1d1f]">PT Bank UOB Indonesia</strong>.
             </p>
 
@@ -93,6 +83,7 @@ export default function Hero({ ready }) {
             <div className="mt-10 flex flex-wrap items-center gap-4" data-hero-fade>
               <a
                 ref={cta}
+                data-shatter="block"
                 href="#work"
                 onClick={(e) => {
                   e.preventDefault();
@@ -108,6 +99,7 @@ export default function Hero({ ready }) {
 
               <a
                 href={profile.cv}
+                data-shatter="block"
                 download="Reyhan_Resha_Sasmita_CV.pdf"
                 className="btn btn-apple-ghost px-5 py-2.5 rounded-full gap-2.5"
               >
@@ -118,9 +110,9 @@ export default function Hero({ ready }) {
 
             {/* Apple Tech Focus Tag Strip */}
             <div className="mt-12 pt-8 border-t border-black/[0.08] flex flex-wrap items-center gap-2.5" data-hero-fade>
-              <span className="font-mono text-xs uppercase tracking-wider text-[#86868b] mr-2">Core Focus:</span>
+              <span data-shatter="chars" className="font-mono text-xs uppercase tracking-wider text-[#86868b] mr-2">Core Focus:</span>
               {["Claude MCP", "Three.js", "Next.js", "React", "Python", "SDET QA"].map((tech) => (
-                <span key={tech} className="tag text-[#1d1d1f] border-black/[0.08] bg-black/[0.04]">
+                <span key={tech} data-shatter="block" className="tag text-[#1d1d1f] border-black/[0.08] bg-black/[0.04]">
                   {tech}
                 </span>
               ))}
@@ -135,7 +127,7 @@ export default function Hero({ ready }) {
 
         {/* Scroll Cue at Bottom */}
         <div className="mt-16 flex items-center justify-between gap-4 pt-6 border-t border-black/[0.08]" data-hero-fade>
-          <span className="font-mono text-xs uppercase tracking-wider text-[#86868b] flex items-center gap-3">
+          <span data-shatter="block" className="font-mono text-xs uppercase tracking-wider text-[#86868b] flex items-center gap-3">
             <span aria-hidden="true" className="relative block h-8 w-px overflow-hidden bg-black/20">
               <span
                 className="absolute inset-0 bg-black"
@@ -144,7 +136,7 @@ export default function Hero({ ready }) {
             </span>
             Scroll to explore
           </span>
-          <span className="font-mono text-xs text-[#86868b] hidden sm:block">
+          <span data-shatter="block" className="font-mono text-xs text-[#86868b] hidden sm:block">
             Jakarta Time: {time} WIB
           </span>
         </div>

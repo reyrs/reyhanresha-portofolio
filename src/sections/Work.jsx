@@ -10,10 +10,9 @@ import QrScan from "../components/visuals/QrScan";
 import CrudTable from "../components/visuals/CrudTable";
 
 const visuals = { chart: GoldChart, chat: BotChat, qr: QrScan, crud: CrudTable };
-const pad = (n) => String(n).padStart(2, "0");
 const horizontal = !reduceMotion;
 
-function ProjectPanel({ project, index }) {
+function ProjectPanel({ project }) {
   const Visual = visuals[project.visual];
   return (
     <article
@@ -65,10 +64,6 @@ function ProjectPanel({ project, index }) {
               <Visual />
             </div>
           )}
-
-          <span className="font-mono text-xs font-semibold text-[#1d1d1f] absolute left-6 top-6 bg-white/90 backdrop-blur-md px-3.5 py-1 rounded-full border border-black/10 shadow-sm">
-            {pad(index + 1)} / {pad(projects.length)}
-          </span>
         </div>
 
         {/* Right Column: Project Context & Metadata */}
@@ -90,7 +85,7 @@ function ProjectPanel({ project, index }) {
             <ul className="mt-6 space-y-2.5">
               {project.points.map((p) => (
                 <li key={p} className="flex gap-3 text-[0.92rem] text-[#6e6e73]">
-                  <span aria-hidden="true" className="mt-[0.65em] h-1.5 w-1.5 rounded-full bg-black shrink-0" />
+                  <span aria-hidden="true" className="shrink-0 text-[#86868b]">–</span>
                   <span>{p}</span>
                 </li>
               ))}
@@ -140,7 +135,6 @@ export default function Work() {
   const root = useRef(null);
   const track = useRef(null);
   const bar = useRef(null);
-  const counter = useRef(null);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -163,8 +157,6 @@ export default function Work() {
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               gsap.set(bar.current, { scaleX: self.progress });
-              const i = Math.min(panels.length, Math.floor(self.progress * panels.length + 0.35));
-              if (counter.current) counter.current.textContent = pad(Math.max(1, i));
             },
           },
         });
@@ -218,8 +210,8 @@ export default function Work() {
           </p>
         </header>
 
-        {projects.map((p, i) => (
-          <ProjectPanel key={p.id} project={p} index={i} />
+        {projects.map((p) => (
+          <ProjectPanel key={p.id} project={p} />
         ))}
 
         <div className={`shrink-0 py-10 ${horizontal ? "lg:w-[26vw] lg:py-0" : ""}`}>
@@ -241,9 +233,6 @@ export default function Work() {
 
       {horizontal && (
         <div aria-hidden="true" className="shell pointer-events-none absolute inset-x-0 bottom-6 hidden items-center gap-6 lg:flex">
-          <span className="font-mono text-xs text-[#86868b] tabular-nums">
-            <span ref={counter}>01</span> / {pad(projects.length)}
-          </span>
           <span className="relative h-1 flex-1 rounded-full bg-black/10 overflow-hidden">
             <span ref={bar} className="absolute inset-0 origin-left scale-x-0 bg-black rounded-full" />
           </span>

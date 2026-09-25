@@ -19,7 +19,9 @@ export default function Nav() {
         scrollTrigger: { start: 0, end: "max", scrub: 0.3 },
       });
 
-      // header hide on scroll down, show on scroll up
+      // header hide on scroll down, show on scroll up. Centering dipegang GSAP (xPercent), karena
+      // tween transform GSAP menghapus `translate` dari class -translate-x-1/2 dan nav jadi bergeser.
+      gsap.set(header.current, { xPercent: -50 });
       const hide = gsap.to(header.current, { yPercent: -110, duration: 0.45, ease: "power3.out", paused: true });
       ScrollTrigger.create({
         start: 0,
@@ -73,6 +75,7 @@ export default function Nav() {
     <>
       <header
         ref={header}
+        data-shatter-fixed
         className="fixed top-4 left-1/2 -translate-x-1/2 w-[min(94vw,1080px)] rounded-full border border-black/[0.08] bg-white/80 backdrop-blur-2xl px-4 py-2 sm:px-5 sm:py-2.5 shadow-[0_10px_30px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] transition-all duration-300"
         style={{ zIndex: "var(--z-nav)" }}
       >
@@ -83,9 +86,8 @@ export default function Nav() {
             onClick={(e) => go(e, "top")}
             className="flex items-center gap-2 text-[0.95rem] sm:text-base font-semibold tracking-tight text-[#1d1d1f] hover:text-black transition-colors shrink-0"
           >
-            <span>Reyhan Resha</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-black shadow-[0_0_6px_rgba(0,0,0,0.3)]" />
-            <span className="hidden sm:inline font-mono text-xs text-[#86868b] font-normal">/dev</span>
+            <span data-shatter="chars">Reyhan Resha</span>
+            <span data-shatter="chars" className="hidden sm:inline font-mono text-xs text-[#86868b] font-normal">/dev</span>
           </a>
 
           {/* Desktop Links with Active Indicator Pill */}
@@ -99,6 +101,7 @@ export default function Nav() {
                     <a
                       href={`#${id}`}
                       onClick={(e) => go(e, id)}
+                      data-shatter="chars"
                       aria-current={isActive ? "true" : undefined}
                       className={`relative font-mono text-[11px] uppercase tracking-wider flex min-h-[32px] items-center rounded-full px-2.5 xl:px-3.5 font-medium transition-all duration-300 ${
                         isActive
@@ -119,17 +122,15 @@ export default function Nav() {
             <a
               href="#contact"
               onClick={(e) => go(e, "contact")}
+              data-shatter="block"
               className="hidden sm:inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.04] px-3.5 py-1 font-mono text-xs font-semibold text-[#1d1d1f] hover:bg-black hover:text-white transition-all duration-300 shadow-sm shrink-0"
             >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-black opacity-40" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-black" />
-              </span>
               <span>Available for Hire</span>
             </a>
 
             <button
               ref={menuButton}
+              data-shatter="block"
               type="button"
               className="btn btn-apple-ghost min-h-[36px] px-3.5 text-xs font-mono uppercase tracking-wider lg:hidden rounded-full shrink-0"
               aria-expanded={open}
@@ -172,15 +173,14 @@ export default function Nav() {
 
           <nav aria-label="Mobile">
             <ul className="space-y-4">
-              {sections.map(({ id, label }, i) => (
+              {sections.map(({ id, label }) => (
                 <li key={id} className="overflow-hidden">
                   <a
                     data-menu-item
                     href={`#${id}`}
                     onClick={(e) => go(e, id)}
-                    className="flex items-baseline gap-4 py-1.5 text-[clamp(2.2rem,8vw,3.4rem)] font-bold tracking-tight text-[#1d1d1f] hover:text-black transition-colors"
+                    className="block py-1.5 text-[clamp(2.2rem,8vw,3.4rem)] font-bold tracking-tight text-[#1d1d1f] hover:text-black transition-colors"
                   >
-                    <span className="font-mono text-sm text-[#86868b]">0{i + 1}</span>
                     {label}
                   </a>
                 </li>

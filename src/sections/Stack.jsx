@@ -18,7 +18,7 @@ function MarqueeRow({ items, outline, reverse }) {
         {content.map((item, i) => (
           <Fragment key={i}>
             <span className={outline ? "outline-text" : "text-[#1d1d1f]"}>{item}</span>
-            <span className="mx-[0.4em] text-[0.65em] text-black select-none">✦</span>
+            <span aria-hidden="true" className="mx-[0.35em] font-normal text-[#d2d2d7] select-none">/</span>
           </Fragment>
         ))}
       </div>
@@ -199,9 +199,7 @@ export default function Stack() {
               <ul className="space-y-3">
                 {softSkills.map((s) => (
                   <li key={s} className="flex items-start gap-2.5 text-xs text-[#6e6e73] leading-relaxed">
-                    <span className="mt-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-white text-[10px] shrink-0 font-bold">
-                      •
-                    </span>
+                    <span aria-hidden="true" className="shrink-0 text-[#86868b]">–</span>
                     <span>{s}</span>
                   </li>
                 ))}

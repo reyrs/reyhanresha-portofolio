@@ -196,7 +196,7 @@ export default function About() {
               <ul className="mt-6 space-y-3 text-[#6e6e73] text-[0.95rem]">
                 {about.education.points.map((p) => (
                   <li key={p} className="flex gap-3">
-                    <span aria-hidden="true" className="mt-[0.6em] h-1.5 w-1.5 rounded-full bg-black shrink-0" />
+                    <span aria-hidden="true" className="shrink-0 text-[#86868b]">–</span>
                     <span className="leading-relaxed">{p}</span>
                   </li>
                 ))}
@@ -211,7 +211,6 @@ export default function About() {
             <div className="apple-card-inner p-6 bg-white">
               <div className="flex items-center justify-between border-b border-black/[0.08] pb-3 mb-4">
                 <span className="font-mono text-xs font-semibold text-[#1d1d1f] uppercase tracking-wider">Profile Overview</span>
-                <span className="h-2 w-2 rounded-full bg-black" />
               </div>
               <dl className="space-y-4 font-mono text-xs leading-5 text-[#6e6e73]">
                 <div className="flex justify-between items-baseline">
@@ -236,11 +235,7 @@ export default function About() {
                 </div>
                 <div className="flex justify-between items-baseline pt-3 border-t border-black/[0.08]">
                   <dt className="text-[#86868b]">Availability</dt>
-                  <dd className="font-semibold text-black flex items-center gap-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-40"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
-                    </span>
+                  <dd className="font-semibold text-black">
                     Open to Hire
                   </dd>
                 </div>

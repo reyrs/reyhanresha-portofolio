@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { profile } from "../data";
 import { gsap, reduceMotion } from "../lib/scroll";
+import { createShatterField } from "../lib/shatter";
 
 export default function InteractiveProfileCard() {
   const containerRef = useRef(null);
   const cardRef = useRef(null);
   const glareRef = useRef(null);
-  const chip1Ref = useRef(null);
   const floatAnimRef = useRef(null);
 
   const [isFlipped, setIsFlipped] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragHint, setDragHint] = useState("✦ Drag or hover to move");
+  const [dragHint, setDragHint] = useState("Drag or hover to move");
 
   // Drag tracking state
   const dragStartPos = useRef({ x: 0, y: 0 });
@@ -45,13 +45,26 @@ export default function InteractiveProfileCard() {
     return () => stopIdleFloat();
   }, [startIdleFloat, stopIdleFloat]);
 
+  // Teks hero & nav terpental saat ditabrak kartu (lihat lib/shatter.js)
+  const shatter = useRef(null);
+  useEffect(() => {
+    if (reduceMotion) return;
+    const field = createShatterField(() => cardRef.current?.getBoundingClientRect());
+    shatter.current = field;
+    return () => {
+      field.destroy();
+      shatter.current = null;
+    };
+  }, []);
+
   // Pointer Down (Start dragging)
   const handlePointerDown = (e) => {
     if (reduceMotion || !cardRef.current) return;
     isPointerDown.current = true;
     setIsDragging(true);
-    setDragHint("✦ Release to spring back");
+    setDragHint("Release to spring back");
     stopIdleFloat();
+    shatter.current?.begin();
 
     dragStartPos.current = {
       x: e.clientX,
@@ -97,15 +110,6 @@ export default function InteractiveProfileCard() {
         ease: "power1.out",
         overwrite: "auto",
       });
-
-      // Parallax on floating badge
-      if (chip1Ref.current) {
-        gsap.to(chip1Ref.current, {
-          x: deltaX * 0.2,
-          y: deltaY * 0.2,
-          duration: 0.2,
-        });
-      }
     } else {
       // HOVER TILT MODE: 3D perspective tilt & light glare
       isHovered.current = true;
@@ -138,16 +142,6 @@ export default function InteractiveProfileCard() {
           duration: 0.2,
         });
       }
-
-      // Parallax on floating badge
-      if (chip1Ref.current) {
-        gsap.to(chip1Ref.current, {
-          x: normX * -12,
-          y: normY * -12,
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      }
     }
   };
 
@@ -155,8 +149,9 @@ export default function InteractiveProfileCard() {
   const handlePointerUp = (e) => {
     if (!isPointerDown.current) return;
     isPointerDown.current = false;
+    shatter.current?.end();
     setIsDragging(false);
-    setDragHint("✦ Drag or hover to move");
+    setDragHint("Drag or hover to move");
 
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
@@ -180,10 +175,6 @@ export default function InteractiveProfileCard() {
         if (!isHovered.current) startIdleFloat();
       },
     });
-
-    if (chip1Ref.current) {
-      gsap.to(chip1Ref.current, { x: 0, y: 0, duration: 0.6, ease: "back.out(2)" });
-    }
   };
 
   // Pointer Leave (Smooth reset)
@@ -208,8 +199,6 @@ export default function InteractiveProfileCard() {
         startIdleFloat();
       },
     });
-
-    if (chip1Ref.current) gsap.to(chip1Ref.current, { x: 0, y: 0, duration: 0.5 });
   };
 
   // 3D Card Flip Action
@@ -331,21 +320,6 @@ export default function InteractiveProfileCard() {
                 </div>
               </div>
             </div>
-
-            {/* Floating Chip: SDET Experience (Elevated in 3D) */}
-            <div
-              ref={chip1Ref}
-              className="absolute -top-3 -right-3 sm:-right-4 rounded-2xl border border-black/10 bg-white/95 px-3.5 py-2 shadow-xl backdrop-blur-xl flex items-center gap-2.5 pointer-events-none"
-              style={{ transform: "translateZ(45px)", willChange: "transform" }}
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-black text-white text-xs">
-                🛡️
-              </span>
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-wider text-[#86868b]">Experience</p>
-                <p className="text-xs font-semibold text-[#1d1d1f]">SDET @ Bank UOB</p>
-              </div>
-            </div>
           </div>
 
           {/* BACK FACE (Interactive Developer ID Pass) */}
@@ -360,12 +334,9 @@ export default function InteractiveProfileCard() {
           >
             <div>
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-white/70">
-                    DEV PASS · VERIFIED
-                  </span>
-                </div>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-white/70">
+                  DEV PASS · VERIFIED
+                </span>
                 <button
                   type="button"
                   onClick={toggleFlip}
@@ -400,7 +371,7 @@ export default function InteractiveProfileCard() {
                 PASSPORT NO: #RR-2026-ID
               </div>
               <span className="font-mono text-[10px] text-emerald-400 font-semibold">
-                ● LIVE SYSTEM
+                LIVE SYSTEM
               </span>
             </div>
           </div>
@@ -408,12 +379,7 @@ export default function InteractiveProfileCard() {
       </div>
 
       {/* Floating Drag & Interactive Control Cue */}
-      <div className="mt-4 flex items-center justify-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/90 px-3 py-1 font-mono text-[10px] font-medium text-[#6e6e73] shadow-sm backdrop-blur-md">
-          <span className="h-1.5 w-1.5 rounded-full bg-black animate-pulse" />
-          {dragHint}
-        </span>
-      </div>
+      <p className="mt-4 text-center font-mono text-[11px] text-[#86868b]">{dragHint}</p>
     </div>
   );
 }
