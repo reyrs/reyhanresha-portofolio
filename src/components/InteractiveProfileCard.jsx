@@ -7,7 +7,6 @@ export default function InteractiveProfileCard() {
   const cardRef = useRef(null);
   const glareRef = useRef(null);
   const chip1Ref = useRef(null);
-  const chip2Ref = useRef(null);
   const floatAnimRef = useRef(null);
 
   const [isFlipped, setIsFlipped] = useState(false);
@@ -99,18 +98,11 @@ export default function InteractiveProfileCard() {
         overwrite: "auto",
       });
 
-      // Parallax on floating badges
+      // Parallax on floating badge
       if (chip1Ref.current) {
         gsap.to(chip1Ref.current, {
           x: deltaX * 0.2,
           y: deltaY * 0.2,
-          duration: 0.2,
-        });
-      }
-      if (chip2Ref.current) {
-        gsap.to(chip2Ref.current, {
-          x: deltaX * 0.25,
-          y: deltaY * 0.25,
           duration: 0.2,
         });
       }
@@ -147,19 +139,11 @@ export default function InteractiveProfileCard() {
         });
       }
 
-      // Parallax on floating badges
+      // Parallax on floating badge
       if (chip1Ref.current) {
         gsap.to(chip1Ref.current, {
           x: normX * -12,
           y: normY * -12,
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      }
-      if (chip2Ref.current) {
-        gsap.to(chip2Ref.current, {
-          x: normX * 14,
-          y: normY * 14,
           duration: 0.4,
           ease: "power2.out",
         });
@@ -200,9 +184,6 @@ export default function InteractiveProfileCard() {
     if (chip1Ref.current) {
       gsap.to(chip1Ref.current, { x: 0, y: 0, duration: 0.6, ease: "back.out(2)" });
     }
-    if (chip2Ref.current) {
-      gsap.to(chip2Ref.current, { x: 0, y: 0, duration: 0.6, ease: "back.out(2)" });
-    }
   };
 
   // Pointer Leave (Smooth reset)
@@ -229,7 +210,6 @@ export default function InteractiveProfileCard() {
     });
 
     if (chip1Ref.current) gsap.to(chip1Ref.current, { x: 0, y: 0, duration: 0.5 });
-    if (chip2Ref.current) gsap.to(chip2Ref.current, { x: 0, y: 0, duration: 0.5 });
   };
 
   // 3D Card Flip Action
@@ -352,7 +332,7 @@ export default function InteractiveProfileCard() {
               </div>
             </div>
 
-            {/* Floating Chip 1: SDET Experience (Elevated in 3D) */}
+            {/* Floating Chip: SDET Experience (Elevated in 3D) */}
             <div
               ref={chip1Ref}
               className="absolute -top-3 -right-3 sm:-right-4 rounded-2xl border border-black/10 bg-white/95 px-3.5 py-2 shadow-xl backdrop-blur-xl flex items-center gap-2.5 pointer-events-none"
@@ -364,21 +344,6 @@ export default function InteractiveProfileCard() {
               <div>
                 <p className="font-mono text-[9px] uppercase tracking-wider text-[#86868b]">Experience</p>
                 <p className="text-xs font-semibold text-[#1d1d1f]">SDET @ Bank UOB</p>
-              </div>
-            </div>
-
-            {/* Floating Chip 2: AI Agents & Three.js (Elevated in 3D) */}
-            <div
-              ref={chip2Ref}
-              className="absolute -bottom-3 -left-3 sm:-left-4 rounded-2xl border border-black/10 bg-white/95 px-3.5 py-2 shadow-xl backdrop-blur-xl flex items-center gap-2.5 pointer-events-none"
-              style={{ transform: "translateZ(45px)", willChange: "transform" }}
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-black text-white text-xs font-mono">
-                ✦
-              </span>
-              <div>
-                <p className="font-mono text-[9px] uppercase tracking-wider text-[#86868b]">Specialization</p>
-                <p className="text-xs font-semibold text-[#1d1d1f]">Claude MCP &amp; Three.js</p>
               </div>
             </div>
           </div>
