@@ -4,12 +4,12 @@ import { gsap, SplitText, scrollToTarget, reduceMotion } from "../lib/scroll";
 import { useJakartaTime, useMagnetic } from "../lib/hooks";
 import Scramble from "../components/Scramble";
 import { ArrowDown, Download } from "../components/Icons";
+import InteractiveProfileCard from "../components/InteractiveProfileCard";
 
 export default function Hero({ ready }) {
   const root = useRef(null);
   const time = useJakartaTime();
   const cta = useMagnetic(0.25);
-  const cardRef = useMagnetic(0.15);
 
   useLayoutEffect(() => {
     if (reduceMotion) return;
@@ -127,56 +127,9 @@ export default function Hero({ ready }) {
             </div>
           </div>
 
-          {/* Right Column: Apple Double-Bezel Hardware Profile Card */}
+          {/* Right Column: Apple Hardware Profile Card with Interactive 3D Physics */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end relative" data-hero-card>
-            <div
-              ref={cardRef}
-              className="apple-card relative z-10 w-full max-w-[380px] sm:max-w-[400px] p-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500"
-            >
-              <div className="apple-card-inner relative p-2 overflow-hidden bg-white">
-                {/* Photo Frame Container */}
-                <div className="relative aspect-[4/4.8] w-full overflow-hidden rounded-[20px] bg-[#f5f5f7] border border-black/[0.08]">
-                  <img
-                    src={profile.photo}
-                    alt={profile.name}
-                    className="h-full w-full object-cover object-top transition-transform duration-700 hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.src = "/assets/hero-img.webp";
-                    }}
-                  />
-                  {/* Subtle soft dark vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Overlaid Badge */}
-                  <div className="absolute bottom-4 left-4 right-4 text-white">
-                    <p className="text-base font-semibold tracking-tight text-white">{profile.name}</p>
-                    <p className="font-mono text-xs text-white/80">CCIT, Universitas Indonesia</p>
-                  </div>
-                </div>
-
-                {/* Floating Chip 1: SDET Experience */}
-                <div className="absolute -top-3 -right-3 sm:-right-4 rounded-2xl border border-black/10 bg-white/95 px-3.5 py-2 shadow-lg backdrop-blur-xl flex items-center gap-2.5">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-black text-white text-xs">
-                    🛡️
-                  </span>
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-[#86868b]">Experience</p>
-                    <p className="text-xs font-semibold text-[#1d1d1f]">SDET @ Bank UOB</p>
-                  </div>
-                </div>
-
-                {/* Floating Chip 2: AI Agents & Three.js */}
-                <div className="absolute -bottom-3 -left-3 sm:-left-4 rounded-2xl border border-black/10 bg-white/95 px-3.5 py-2 shadow-lg backdrop-blur-xl flex items-center gap-2.5">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-black text-white text-xs font-mono">
-                    ✦
-                  </span>
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-[#86868b]">Specialization</p>
-                    <p className="text-xs font-semibold text-[#1d1d1f]">Claude MCP &amp; Three.js</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <InteractiveProfileCard />
           </div>
         </div>
 
