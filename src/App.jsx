@@ -7,6 +7,7 @@ import ParticleCanvas from "./components/ParticleCanvas";
 import ScrollIndicator from "./components/ScrollIndicator";
 import CursorGlow from "./components/CursorGlow";
 import Hero from "./sections/Hero";
+import Process from "./sections/Process";
 import About from "./sections/About";
 import Stack from "./sections/Stack";
 import Work from "./sections/Work";
@@ -36,6 +37,7 @@ export default function App() {
       <Nav />
       <main id="main" className="relative" style={{ zIndex: "var(--z-content)" }}>
         <Hero ready={ready} />
+        <Process />
         <About />
         <Stack />
         <Work />

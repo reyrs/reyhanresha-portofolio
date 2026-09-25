@@ -54,6 +54,38 @@ export const about = {
   },
 };
 
+// Section animasi scroll (wireframe -> laptop -> code -> website). `until` = batas akhir tiap
+// scene dalam urutan frame (0-1), mengikuti titik sambung 3 video di public/assets/sequence.
+export const buildProcess = {
+  label: "From Blueprint to Product",
+  steps: [
+    {
+      id: "blueprint",
+      label: "Blueprint",
+      lead: "Every idea starts as a",
+      key: "blueprint.",
+      body: "System architecture, data models, and test plans mapped out before the first commit.",
+      until: 0.335,
+    },
+    {
+      id: "code",
+      label: "Code",
+      lead: "Then it gets",
+      key: "written in code.",
+      body: "Next.js, React, Laravel, Node.js, and Python, typed, reviewed, and covered by automated tests.",
+      until: 0.665,
+    },
+    {
+      id: "product",
+      label: "Product",
+      lead: "And ships as a",
+      key: "real product.",
+      body: "Production platforms on Vercel, from real-time trading dashboards to autonomous AI agents.",
+      until: 1,
+    },
+  ],
+};
+
 export const stack = [
   {
     group: "AI Agents & Autonomous Systems",
