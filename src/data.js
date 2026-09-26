@@ -33,23 +33,23 @@ export const socials = [
 ];
 
 export const about = {
-  badge: "Background & Engineering Philosophy",
+  badge: "About",
   statement:
-    "I'm an IT student at CCIT, Faculty of Engineering, Universitas Indonesia. I engineer fullstack web applications with Next.js, React, Three.js, and Node.js/Laravel, build autonomous AI agent architectures, including integrating Claude via Model Context Protocol (MCP) with MetaTrader 5 (MT5) for professional-grade trade analysis, and apply six months of rigorous mobile banking testing at PT Bank UOB Indonesia. I have shipped real-world production platforms including JagoBrand, BugHunter, WaifuNova, and the Alpha Gold Society trading platform.",
+    "I'm a fullstack developer and IT student at CCIT, Faculty of Engineering, Universitas Indonesia. I build web applications with Next.js, React, Node.js, and Laravel, and AI tools that work with real business data. I currently build internal systems for Berlin188 Garage and trading tools for PT Midtou Aryacom Futures. Six months as an SDET intern at PT Bank UOB Indonesia taught me to test my work properly before it reaches users.",
   stats: [
-    { value: 4, suffix: "+", label: "Live production web apps shipped on Vercel" },
-    { value: 20, suffix: "+", label: "VIP traders onboarded on Alpha Gold Society in 3 months" },
-    { value: 20, prefix: "~", label: "End-to-end test cases automated and executed for UOB TMRW" },
-    { value: 6, suffix: " mo", label: "Intensive SDET Internship at PT Bank UOB Indonesia" },
+    { value: 4, suffix: "+", label: "Web apps running in production" },
+    { value: 20, suffix: "+", label: "Paying VIP members on Alpha Gold Society within three months" },
+    { value: 20, suffix: "+", label: "Test cases written and run for the UOB TMRW mobile app" },
+    { value: 6, suffix: " mo", label: "SDET internship at PT Bank UOB Indonesia" },
   ],
   education: {
     school: "CCIT, Faculty of Engineering, Universitas Indonesia",
     program: "Professional Program in Information Technology (Fullstack Developer)",
     period: "2024 - Present",
     points: [
-      "Fullstack web architecture with Next.js, React, Three.js, Laravel/Node.js, MySQL, and MongoDB",
-      "Autonomous AI Agent workflows with Hermes Agent, KikoClaw, OpenClaw, tool-calling, and LLM orchestration",
-      "Rigorous API design, JWT security, Vercel deployments, and production CI/CD git workflows",
+      "Fullstack web development with Next.js, React, Laravel, Node.js, MySQL, and MongoDB",
+      "AI agent development with tool calling and LLM integration (Hermes Agent, KikoClaw, OpenClaw)",
+      "REST API design, JWT authentication, Git workflows, and deployment on Vercel",
     ],
   },
 };
@@ -233,25 +233,42 @@ export const projects = [
     visual: "chart",
   },
   {
-    id: "signal-bot",
-    title: "AI Telegram Signal Bot",
-    kind: "Autonomous Trading Assistant",
-    year: "2025",
+    id: "berlin188-showroom",
+    title: "Berlin188 Garage",
+    kind: "Workshop Showroom Microsite",
+    year: "2026",
     summary:
-      "Intelligent Telegram bot powered by Python and OpenClaw. Automatically computes entry, take-profit (TP), stop-loss (SL) with risk/reward calculation, and answers ad-hoc market questions via conversational AI.",
+      "Public site for a European car workshop in Tangerang Selatan. Each car make and each stage of a service is presented as a scroll-driven scene, with booking handled through WhatsApp.",
     points: [
-      "Automated trade signal generation with entry, TP, SL, and risk/reward parameters",
-      "Conversational natural language assistant answering daily technical gold analysis",
-      "Instant push notifications when price levels hit user-defined trigger zones",
+      "Showroom intro that opens like a garage door and moves through six makes: BMW, Mercedes-Benz, Audi, Volkswagen, MINI, and Land Rover",
+      "Service story that follows a car from teardown, inspection, and diagnosis to reassembly and handover as the visitor scrolls",
+      "Fourteen services in five categories, each with a direct WhatsApp inquiry",
+      "Asset pipeline that turns generated video clips into scroll-scrubbed sequences for desktop and mobile",
     ],
-    tech: ["Python", "OpenClaw", "Telegram Bot API", "AsyncIO"],
-    repo: "https://github.com/reyrs",
-    image: "/assets/proyek/proyek2.webp",
-    visual: "chat",
+    tech: ["React", "TypeScript", "GSAP ScrollTrigger", "Lenis", "Tailwind CSS", "Netlify"],
+    demo: "https://berlin188garage.netlify.app/",
+    repo: "https://github.com/reyrs/Berlin188Garage3D",
+    image: "/assets/proyek/berlin188.jpg",
+    visual: "crud",
   },
 ];
 
 export const experience = [
+  {
+    role: "Fullstack Developer",
+    company: "Berlin188 Garage",
+    place: "Tangerang Selatan, Indonesia",
+    period: "Jul 2026 - Present",
+    points: [
+      "Built the internal workshop dashboard used by seven staff roles (service advisor, cashier, warehouse, mechanic, marketing, manager, owner) to run each work order from vehicle intake and parts estimate to invoice, bay assignment, and payment",
+      "Developed stock and purchasing for 1,400+ spare-part SKUs, including supplier orders, payables tracking, cash closing, and daily and profit-and-loss reports for the owner",
+      "Added STNK photo scanning with the Gemini API to fill in plate, VIN, and engine numbers at intake, plus A4 print layouts for invoices, estimates, and work orders with PDF and Excel export",
+      "Created a separate payroll app for the manager covering weekly and monthly pay, overtime, cash advances, and leave deductions, with locked paid periods, an audit log, and payslips sent over WhatsApp",
+      "Designed and built the showroom microsite, with a scroll-driven story for each car make and the 14 workshop services, using GSAP ScrollTrigger and scroll-scrubbed video",
+      "Helped build an AI agent that pulls sales and content data from Shopee, Tokopedia, TikTok, and Instagram into one dashboard for the marketing team's analysis",
+    ],
+    tags: ["React", "TypeScript", "Supabase", "Gemini API", "GSAP", "AI Agents"],
+  },
   {
     role: "Software Development Engineer in Test (SDET) Intern",
     company: "PT Bank UOB Indonesia",

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { about } from "../data";
+import { about, profile } from "../data";
 import { gsap, SplitText, reduceMotion } from "../lib/scroll";
 import { spotlight } from "../lib/hooks";
 import SectionLabel from "../components/SectionLabel";
@@ -68,7 +68,7 @@ export default function About() {
     <section id="about" ref={root} data-shape="1" className="relative py-24 lg:py-36 bg-white">
       <div className="shell grid gap-y-16 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <SectionLabel>Philosophy &amp; Background</SectionLabel>
+          <SectionLabel>About</SectionLabel>
 
           {/* Apple Signature Text Scrub Statement */}
           <p
@@ -91,10 +91,10 @@ export default function About() {
                     &lt;/&gt;
                   </div>
                   <h3 className="mt-4 font-bold text-[#1d1d1f] text-base tracking-tight group-hover:text-black transition-colors">
-                    Fullstack &amp; 3D Web
+                    Fullstack Web
                   </h3>
                   <p className="mt-2 text-xs text-[#6e6e73] leading-relaxed">
-                    Responsive production web apps built with Next.js, React, Three.js, and Node.js with 60fps hardware acceleration.
+                    Web apps from database to interface with Next.js, React, Node.js, and Laravel, plus 3D and scroll-based interfaces with Three.js and GSAP.
                   </p>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-1.5 pt-3 border-t border-black/[0.06]">
@@ -118,14 +118,14 @@ export default function About() {
                     AI
                   </div>
                   <h3 className="mt-4 font-bold text-[#1d1d1f] text-base tracking-tight group-hover:text-black transition-colors">
-                    Autonomous AI &amp; MCP
+                    AI Integration
                   </h3>
                   <p className="mt-2 text-xs text-[#6e6e73] leading-relaxed">
-                    Claude MCP integration with MetaTrader 5 (MT5), autonomous multi-agent systems (Hermes, KikoClaw), and tool calling.
+                    AI agents connected to real systems, such as Claude with MetaTrader 5 through MCP and marketplace data for marketing teams.
                   </p>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-1.5 pt-3 border-t border-black/[0.06]">
-                  {["Claude MCP", "MT5", "Hermes", "KikoClaw"].map((t) => (
+                  {["Claude MCP", "MT5", "Gemini API", "Python"].map((t) => (
                     <span key={t} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/[0.04] text-[#1d1d1f] border border-black/[0.08]">
                       {t}
                     </span>
@@ -145,14 +145,14 @@ export default function About() {
                     QA
                   </div>
                   <h3 className="mt-4 font-bold text-[#1d1d1f] text-base tracking-tight group-hover:text-black transition-colors">
-                    SDET Quality Rigor
+                    Software Testing
                   </h3>
                   <p className="mt-2 text-xs text-[#6e6e73] leading-relaxed">
-                    Banking-grade verification at PT Bank UOB Indonesia. ~20 E2E cases, Postman API suites, and zero-defect mindset.
+                    Manual, regression, and API testing from my internship at PT Bank UOB Indonesia, with JIRA for defect tracking and Postman for API checks.
                   </p>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-1.5 pt-3 border-t border-black/[0.06]">
-                  {["Bank UOB", "JIRA", "Postman", "E2E"].map((t) => (
+                  {["Regression", "JIRA", "Postman", "API Testing"].map((t) => (
                     <span key={t} className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-black/[0.04] text-[#1d1d1f] border border-black/[0.08]">
                       {t}
                     </span>
@@ -186,7 +186,7 @@ export default function About() {
           <div data-edu className="apple-card mt-16">
             <div className="apple-card-inner p-7 sm:p-9 bg-white">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/[0.08] pb-4 mb-6">
-                <span className="font-mono text-xs uppercase tracking-wider text-[#86868b]">Formal Education</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-[#86868b]">Education</span>
                 <span className="font-mono text-xs font-semibold text-black bg-black/[0.05] px-3.5 py-1 rounded-full border border-black/10">
                   {about.education.period}
                 </span>
@@ -215,7 +215,7 @@ export default function About() {
               <dl className="space-y-4 font-mono text-xs leading-5 text-[#6e6e73]">
                 <div className="flex justify-between items-baseline">
                   <dt className="text-[#86868b]">Name</dt>
-                  <dd className="font-medium text-[#1d1d1f]">R. R. Sasmita</dd>
+                  <dd className="font-medium text-[#1d1d1f]">{profile.name}</dd>
                 </div>
                 <div className="flex justify-between items-baseline">
                   <dt className="text-[#86868b]">Role</dt>
@@ -231,7 +231,7 @@ export default function About() {
                 </div>
                 <div className="flex justify-between items-baseline">
                   <dt className="text-[#86868b]">Specialty</dt>
-                  <dd className="font-medium text-[#1d1d1f]">Claude MCP · Three.js</dd>
+                  <dd className="font-medium text-[#1d1d1f]">AI Agents &amp; ERP</dd>
                 </div>
                 <div className="flex justify-between items-baseline pt-3 border-t border-black/[0.08]">
                   <dt className="text-[#86868b]">Availability</dt>
