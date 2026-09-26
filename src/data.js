@@ -35,7 +35,7 @@ export const socials = [
 export const about = {
   badge: "About",
   statement:
-    "I'm a fullstack developer and IT student at CCIT, Faculty of Engineering, Universitas Indonesia. I build web applications with Next.js, React, Node.js, and Laravel, and AI tools that work with real business data. I currently build internal systems for Berlin188 Garage and trading tools for PT Midtou Aryacom Futures. Six months as an SDET intern at PT Bank UOB Indonesia taught me to test my work properly before it reaches users.",
+    "I'm a fullstack developer and IT student at CCIT, Faculty of Engineering, Universitas Indonesia. I build web applications with Next.js, React, Node.js, and Laravel, and AI tools that work with real business data. I currently build internal systems for Berlin188 Garage, and previously built trading tools for PT Midtou Aryacom Futures. Six months as an SDET intern at PT Bank UOB Indonesia taught me to test my work properly before it reaches users.",
   stats: [
     { value: 4, suffix: "+", label: "Web apps running in production" },
     { value: 20, suffix: "+", label: "Paying VIP members on Alpha Gold Society within three months" },
@@ -286,7 +286,7 @@ export const experience = [
     role: "Fullstack Developer & AI Engineer",
     company: "PT Midtou Aryacom Futures",
     place: "Jakarta, Indonesia",
-    period: "Sep 2025 - Present",
+    period: "Sep 2025 - Dec 2025",
     points: [
       "Architected a Model Context Protocol (MCP) bridge integrating Claude AI with MetaTrader 5 (MT5), enabling autonomous real-time querying of account metrics, market orders, and candlestick structures",
       "Engineered an automated trade analysis pipeline grounded in datasets from professional traders to evaluate setups, market bias, and risk-to-reward ratios with institutional precision",
@@ -299,7 +299,7 @@ export const experience = [
     role: "Blu Ambassador",
     company: "BCA Digital",
     place: "Part-time",
-    period: "2025 - Present",
+    period: "Apr 2025 - Aug 2025",
     points: [
       "Advocated blu digital banking solutions and educated university students on financial literacy and security",
       "Organized onboarding workshops and community initiatives driving user adoption",
