@@ -203,7 +203,7 @@ export default function Work() {
             Systems I&apos;ve <span className="text-black italic">shipped.</span>
           </h2>
           <p className="mt-5 max-w-[38ch] text-[#6e6e73] leading-relaxed">
-            Real-world production platforms spanning algorithmic trading systems, autonomous AI agent pipelines, and banking-grade software.
+            Four production platforms, built end to end and live today: a European-car workshop, a humanoid robot rental fleet, an anime AI companion studio, and a national agrochemical catalogue.
           </p>
           <p className={`font-mono text-xs uppercase tracking-wider text-[#86868b] mt-10 hidden items-center gap-2 ${horizontal ? "lg:flex" : ""}`}>
             Scroll to explore projects <ArrowRight />
